@@ -1,35 +1,34 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-use App\Models\Movie; 
+use App\Models\Movie;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-    public function index(){
-        //Query all the movies from the database. 
+    public function index()
+    {
+        // Query all movies from the database
         $movies = Movie::all();
 
-        //Prepare for the response data
-        $response=[
+        // Prepare the response data
+        $response = [
             'message' => 'Movies successfully retrieved.',
-            'movies'=> $movies,
+            'movies' => $movies,
         ];
 
-        //Return the data as JSON
+        // Return the data as JSON
         return response()->json($response);
-
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         // Validate user input
-        $validator = Validator::make($request->all(),
-        [
+        $validator = Validator::make($request->all(), [
             'title' => 'required|string',
-            'description' => 'required|text',
+            'description' => 'required|string',
             'poster' => 'required|image|mimes:jpeg,png|max:2048', // Adjust allowed image types and max size
         ]);
 
@@ -39,7 +38,7 @@ class MovieController extends Controller
                 'message' => 'Validation failed',
                 'errors' => $validator->errors(),
             ], 422);
-        }   
+        }
 
         // Save the uploaded poster image to the filesystem
         $poster = $request->file('poster');
@@ -65,7 +64,7 @@ class MovieController extends Controller
             ],
         ];
 
+        // Return the data as JSON
         return response()->json($response);
-
     }
 }
